@@ -22,7 +22,6 @@ export class GetOnePostHandler implements ICommandHandler<GetOnePostCommand> {
 
   async execute(payload: { id: string; params: QueryPaginationParams }) {
     const { id, params } = payload;
-    console.log(params);
     const post = await this.isPostExist.check(payload.id);
 
     const { comments, totalCount } = await this.commentRepository.getComments(

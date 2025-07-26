@@ -15,7 +15,6 @@ export class GetMeHandler implements ICommandHandler<GetMeCommand> {
   ) {}
 
   async execute({ payload }: GetMeCommand) {
-    console.log(payload.accessToken);
     const tokenPayload = this.jwtService.getResultByToken(payload.accessToken);
     if (!tokenPayload) throw new UnauthorizedException('Unauthorized');
     const user = await this.userRepository.getUserById(tokenPayload.id);

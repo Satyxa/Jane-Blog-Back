@@ -54,7 +54,6 @@ export class AuthController {
     @Body() payload: LoginRegistrationRequest,
     @Res({ passthrough: true }) res: Response,
   ): Promise<string> {
-    console.log(1);
     const token = await this.commandBus.execute(new LoginCommand(payload));
     res.cookie('accessToken', token, cookieOptions('localhost'));
     return token;

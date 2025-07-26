@@ -12,7 +12,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '../auth/helpers/auth.guard';
 import { Request } from 'express';
 import { CreateCommentCommand } from './use-cases/create.comment.command';
@@ -48,7 +47,6 @@ export class CommentsController {
     @Param('postId') postId: string,
     @Query() params: QueryPaginationParams,
   ): Promise<Comment[]> {
-    console.log('controller');
     return await this.commandBus.execute(
       new GetCommentsCommand(postId, params),
     );

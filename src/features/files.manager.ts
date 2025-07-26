@@ -24,21 +24,15 @@ export class FilesManager {
     originalName: string,
     folder = 'posts/poster',
   ): Promise<string> {
-    console.log(originalName);
     const parts = originalName.split('.');
     const extension = parts.length > 1 ? `.${parts.pop()}` : '.jpg';
-    console.log(2);
     const fileName = `${folder}/${uuid.v4()}${extension}`;
-    console.log(3);
     const bucket = this.storage.bucket(this.bucketName);
-    console.log(4);
     const file = bucket.file(fileName);
-    console.log(5);
     await file.save(fileBuffer, {
       contentType: mime.lookup(extension) || 'image/jpeg',
       resumable: false,
     });
-    console.log(6);
     // await file.makePublic();
     return `https://storage.googleapis.com/${this.bucketName}/${fileName}`;
   }

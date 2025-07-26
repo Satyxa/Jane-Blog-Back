@@ -74,7 +74,6 @@ export class PostsController {
       images?: Express.Multer.File[];
     },
   ): Promise<Posts | null> {
-    console.log('create POST (#)RI@#)(R)@#');
     if (!req.userId) return null;
     return await this.commandBus.execute(
       new CreatePostCommand({ ...payload, ...files }, req.userId),

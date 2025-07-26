@@ -22,16 +22,15 @@ export class CreateCommentHandler
 
   async execute({ payload, postId }: CreateCommentCommand) {
     const { text, username, replyToId } = payload;
-    console.log(payload);
     await this.isPostExist.check(postId);
-    console.log(replyToId);
+
     const comment = await this.commentRepository.createComment({
       postId,
       text,
       username,
       replyToId: replyToId ?? null,
     });
-    console.log(comment);
+
     return Comment.createViewModel(comment);
   }
 }

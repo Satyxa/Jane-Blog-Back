@@ -53,7 +53,6 @@ export class CommentRepository {
         parentComment: { id: payload.replyToId },
       }),
     };
-    console.log(commentData);
     return await this.CommentRepository.save(commentData);
   }
 

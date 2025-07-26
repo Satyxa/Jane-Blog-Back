@@ -17,7 +17,6 @@ export class SaveSliderImageHandler
 
   async execute({ payload }: SaveSliderImageCommand) {
     const { file } = payload;
-    console.log(file);
     const url = await this.filesManager.uploadImage(
       file.buffer,
       file.originalname,

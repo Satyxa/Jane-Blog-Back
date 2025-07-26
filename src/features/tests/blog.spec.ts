@@ -323,7 +323,6 @@ describe('Testing app', () => {
       const response = await request(app.getHttpServer())
         .get(`${pathes.posts}${post!.id}`)
         .expect(200);
-      console.log(response.body.comments);
       expect(response.body.comments).toMatchObject(
         expect.arrayContaining([
           {

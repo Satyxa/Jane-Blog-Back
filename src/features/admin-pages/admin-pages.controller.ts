@@ -64,7 +64,6 @@ export class AdminPagesController {
     @UploadedFiles()
     images: Express.Multer.File[],
   ) {
-    console.log(images);
     return await this.commandBus.execute(
       new UpdateWffPnaaCommand({ ...payload, images: images ?? [] }),
     );
@@ -74,14 +73,12 @@ export class AdminPagesController {
   @Put('/quote')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateQuote(@Body() payload: UpdateQuoteRequest) {
-    console.log('upd quote 1');
     return await this.commandBus.execute(new UpdateQuoteCommand(payload));
   }
 
   @Get('/wff-pnaa-pages')
   @HttpCode(HttpStatus.OK)
   async getWffPnaaPage(@Query() payload: { pageType: PageType }) {
-    console.log(payload.pageType);
     return await this.adminPagesRepository.getWffPnaaPage(payload.pageType);
   }
 
@@ -103,7 +100,6 @@ export class AdminPagesController {
   @UseGuards(AuthGuard)
   @Delete('/slider')
   async deleteSlide(@Body('url') url: string) {
-    console.log(url);
     await this.adminPagesRepository.deleteSliderImage({ url });
   }
 

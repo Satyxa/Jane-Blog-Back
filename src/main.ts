@@ -48,7 +48,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
-  console.log(new Date().toISOString());
   await app.listen(3000, '0.0.0.0');
 }
 bootstrap();

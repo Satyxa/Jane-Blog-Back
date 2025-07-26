@@ -11,7 +11,6 @@ export class UpdateQuoteHandler implements ICommandHandler<UpdateQuoteCommand> {
   constructor(private adminPagesRepository: AdminPagesRepository) {}
 
   async execute({ payload }: UpdateQuoteCommand) {
-    console.log(2);
     return await this.adminPagesRepository.updateQuote(payload);
   }
 }

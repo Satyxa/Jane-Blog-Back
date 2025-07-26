@@ -34,7 +34,6 @@ export class UpdateOnePostHandler
       images: Express.Multer.File[];
     };
   }) {
-    console.log(111);
     const { text, title, file, images } = payload.data;
     await this.adminCheck.findById(payload.userId);
     const post = await this.isPostExist.check(payload.id);
