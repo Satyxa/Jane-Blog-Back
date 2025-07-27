@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.use(cookieParser()); // <--- вот это важно!
   app.enableCors({
-    origin: 'https://jane-blog-front-vubl.vercel.app', // ← укажи твой фронтенд
+    origin: 'https://inctagram.fun', // ← укажи твой фронтенд
     credentials: true, // ← обязательно для работы с куками
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
