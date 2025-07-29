@@ -45,13 +45,18 @@ export class UpdateOnePostHandler
       imageUrl = await this.filesManager.uploadImage(
         file[0].buffer,
         file[0].originalname,
+        post.id,
       );
     }
 
     if (images && images.length > 0) {
       if (post.imagesUrls.length > 0)
         await this.filesManager.deleteImages(post.imagesUrls);
-      imagesUrls = await this.filesManager.uploadImages(images, 'posts/images');
+      imagesUrls = await this.filesManager.uploadImages(
+        images,
+        'posts/images',
+        post.id,
+      );
     }
 
     return await this.postRepository.updatePost(payload.id, {

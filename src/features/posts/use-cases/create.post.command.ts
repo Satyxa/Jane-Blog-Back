@@ -6,7 +6,7 @@ import { AdminCheck } from '../../utils/admin-check';
 import { FilesManager } from '../../files.manager';
 import { getRelativeTime } from '../../utils/createdAt-formatting';
 import { BadRequestException } from '@nestjs/common';
-
+import * as uuid from 'uuid';
 export class CreatePostCommand {
   constructor(
     public payload: CreatePostRequest,
@@ -25,6 +25,8 @@ export class CreatePostHandler implements ICommandHandler<CreatePostCommand> {
   async execute({ payload, userId }: CreatePostCommand) {
     const { text, title, file, images } = payload;
 
+    const postId = uuid.v4();
+
     await this.adminCheck.findById(userId);
     let imageUrl: string | null = null;
     let imagesUrls: string[] | null = [];
@@ -32,6 +34,7 @@ export class CreatePostHandler implements ICommandHandler<CreatePostCommand> {
       imageUrl = await this.filesManager.uploadImage(
         file[0].buffer,
         file[0].originalname,
+        postId,
       );
     } else if (file.length === 0) {
       throw new BadRequestException({
@@ -41,10 +44,15 @@ export class CreatePostHandler implements ICommandHandler<CreatePostCommand> {
     }
 
     if (images && images.length > 0) {
-      imagesUrls = await this.filesManager.uploadImages(images, 'posts/images');
+      imagesUrls = await this.filesManager.uploadImages(
+        images,
+        'posts/images',
+        postId,
+      );
     }
 
     const post = await this.postRepository.createPost({
+      id: postId,
       user: { id: userId },
       text,
       title,

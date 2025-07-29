@@ -34,6 +34,7 @@ export class PostsRepository {
   }
 
   async createPost(payload: {
+    id: string;
     text: string;
     title: string;
     imageUrl: string | null;

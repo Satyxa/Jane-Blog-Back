@@ -22,10 +22,11 @@ export class FilesManager {
     fileBuffer: Buffer,
     originalName: string,
     folder = 'posts/poster',
+    postId: string = uuid.v4(),
   ): Promise<string> {
     const parts = originalName.split('.');
     const extension = parts.length > 1 ? `.${parts.pop()}` : '.jpg';
-    const fileName = `${folder}/${uuid.v4()}${extension}`;
+    const fileName = `${folder}/${postId}/${uuid.v4()}${extension}`;
     const bucket = this.storage.bucket(this.bucketName);
     const file = bucket.file(fileName);
     await file.save(fileBuffer, {
@@ -39,6 +40,7 @@ export class FilesManager {
   async uploadImages(
     files: Express.Multer.File[],
     folder: PageType | 'posts/images',
+    postId: string = uuid.v4(),
   ): Promise<string[]> {
     if (files.length > 10) {
       throw new BadRequestException({
@@ -57,7 +59,7 @@ export class FilesManager {
 
     const urls = await Promise.all(
       files.map((file) =>
-        this.uploadImage(file.buffer, file.originalname, folder),
+        this.uploadImage(file.buffer, file.originalname, folder, postId),
       ),
     );
 
@@ -85,7 +87,7 @@ export class FilesManager {
       'Files in folder:',
       files.map((f) => f.name),
     );
-    console.log(bucket);
+    console.log(bucket.name);
     const file = bucket.file(filePath);
     const [exists] = await file.exists();
 
