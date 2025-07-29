@@ -77,7 +77,7 @@ export class FilesManager {
     const filePath = decodeURIComponent(
       url.pathname.replace(`/${this.bucketName}/`, ''),
     );
-
+    console.log('Deleting file at path:', filePath);
     const bucket = this.storage.bucket(this.bucketName);
     const file = bucket.file(filePath);
     const [exists] = await file.exists();
