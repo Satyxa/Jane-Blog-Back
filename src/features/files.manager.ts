@@ -73,9 +73,9 @@ export class FilesManager {
   }
 
   async deleteImage(fileUrl: string): Promise<void> {
-    const filePath = fileUrl.replace(
-      `https://storage.googleapis.com/${this.bucketName}/`,
-      '',
+    const url = new URL(fileUrl);
+    const filePath = decodeURIComponent(
+      url.pathname.replace(`/${this.bucketName}/`, ''),
     );
 
     const bucket = this.storage.bucket(this.bucketName);
