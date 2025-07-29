@@ -55,7 +55,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<string> {
     const token = await this.commandBus.execute(new LoginCommand(payload));
-    res.cookie('accessToken', token, cookieOptions());
+    res.cookie(
+      'accessToken',
+      token,
+      cookieOptions(this.configService.get('DOMAIN')!),
+    );
     return token;
   }
 

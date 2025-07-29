@@ -8,11 +8,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(cookieParser()); // <--- вот это важно!
+  //const whitelist = ['https://inctagram.fun', 'http://localhost:4000'];
   app.enableCors({
-    origin: 'https://inctagram.fun', // ← укажи твой фронтенд
-    credentials: true, // ← обязательно для работы с куками
+    origin: ['http://localhost:4000', 'https://inctagram.fun'],
+    credentials: true,
   });
+  app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new ValidationPipe({

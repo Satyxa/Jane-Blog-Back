@@ -14,9 +14,8 @@ export class FilesManager {
   private migrated = false;
   constructor(private configService: ConfigService) {
     this.bucketName = this.configService.get('GCS_BUCKET_NAME')!;
-    this.storage = new Storage({
-      keyFilename: this.configService.get('GCS_KEY_PATH'),
-    });
+    const credentials = JSON.parse(this.configService.get('GCS_CREDENTIALS')!);
+    this.storage = new Storage({ credentials });
   }
 
   async uploadImage(
