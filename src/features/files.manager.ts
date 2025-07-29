@@ -32,7 +32,7 @@ export class FilesManager {
       contentType: mime.lookup(extension) || 'image/jpeg',
       resumable: false,
     });
-    // await file.makePublic();
+    console.log('Uploading to:', fileName);
     return `https://storage.googleapis.com/${this.bucketName}/${fileName}`;
   }
 
@@ -78,7 +78,14 @@ export class FilesManager {
       url.pathname.replace(`/${this.bucketName}/`, ''),
     );
     console.log('Deleting file at path:', filePath);
+
     const bucket = this.storage.bucket(this.bucketName);
+    const [files] = await bucket.getFiles({ prefix: 'posts/poster/' });
+    console.log(
+      'Files in folder:',
+      files.map((f) => f.name),
+    );
+    console.log(bucket);
     const file = bucket.file(filePath);
     const [exists] = await file.exists();
 
