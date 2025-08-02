@@ -34,6 +34,7 @@ export class CreatePostHandler implements ICommandHandler<CreatePostCommand> {
       imageUrl = await this.filesManager.uploadImage(
         file[0].buffer,
         file[0].originalname,
+        'posts/poster',
         postId,
       );
     } else if (file.length === 0) {

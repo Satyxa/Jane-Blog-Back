@@ -21,6 +21,7 @@ export class SaveSliderImageHandler
       file.buffer,
       file.originalname,
       'slider',
+      null,
     );
 
     return await this.adminPagesRepository.saveSliderImage({ url });

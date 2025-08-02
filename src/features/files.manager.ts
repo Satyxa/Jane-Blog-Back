@@ -21,12 +21,13 @@ export class FilesManager {
   async uploadImage(
     fileBuffer: Buffer,
     originalName: string,
-    folder = 'posts/poster',
-    postId: string = uuid.v4(),
+    folder: string,
+    postId: string | null,
   ): Promise<string> {
     const parts = originalName.split('.');
     const extension = parts.length > 1 ? `.${parts.pop()}` : '.jpg';
-    const fileName = `${folder}/${postId}/${uuid.v4()}${extension}`;
+    const path = postId ? `${folder}/${postId}` : `${folder}/`;
+    const fileName = `${path}/${uuid.v4()}${extension}`;
     const bucket = this.storage.bucket(this.bucketName);
     const file = bucket.file(fileName);
     await file.save(fileBuffer, {
@@ -40,7 +41,7 @@ export class FilesManager {
   async uploadImages(
     files: Express.Multer.File[],
     folder: PageType | 'posts/images',
-    postId: string = uuid.v4(),
+    postId: string | null,
   ): Promise<string[]> {
     if (files.length > 10) {
       throw new BadRequestException({
@@ -48,20 +49,24 @@ export class FilesManager {
         message: 'Cannot upload more than 10 images',
       });
     }
+    const path = postId ? `${folder}/${postId}` : `${folder}/`;
 
     const bucket = this.storage.bucket(this.bucketName);
 
-    const [existingFiles] = await bucket.getFiles({ prefix: `${folder}/` });
+    const [existingFiles] = await bucket.getFiles({ prefix: `${path}` });
 
     if (existingFiles.length > 0) {
       await Promise.all(existingFiles.map((file) => file.delete()));
     }
+    let urls: string[] = [];
 
-    const urls = await Promise.all(
-      files.map((file) =>
-        this.uploadImage(file.buffer, file.originalname, folder, postId),
-      ),
-    );
+    if (files.length > 0) {
+      urls = await Promise.all(
+        files.map((file) =>
+          this.uploadImage(file.buffer, file.originalname, folder, postId),
+        ),
+      );
+    }
 
     return urls;
   }
@@ -75,6 +80,7 @@ export class FilesManager {
   }
 
   async deleteImage(fileUrl: string): Promise<void> {
+    console.log(fileUrl);
     const url = new URL(fileUrl);
     const filePath = decodeURIComponent(
       url.pathname.replace(`/${this.bucketName}/`, ''),
@@ -99,6 +105,7 @@ export class FilesManager {
   }
 
   async deleteImages(fileUrls: string[]): Promise<void> {
+    console.log(fileUrls);
     await Promise.all(fileUrls.map((url) => this.deleteImage(url)));
   }
 }

@@ -45,6 +45,7 @@ export class UpdateOnePostHandler
       imageUrl = await this.filesManager.uploadImage(
         file[0].buffer,
         file[0].originalname,
+        'posts/poster',
         post.id,
       );
     }
