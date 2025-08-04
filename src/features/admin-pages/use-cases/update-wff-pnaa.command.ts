@@ -19,7 +19,6 @@ export class UpdateWFFPNAAHandler
 
   async execute({ payload }: UpdateWffPnaaCommand) {
     const { title, text, pageType, images } = payload;
-    console.log(payload);
     const page = await this.adminPagesRepository.getWffPnaaPage(pageType);
     if (!page) throw new NotFoundError(`Page ${pageType} not found`);
     let urls: string[] = [];

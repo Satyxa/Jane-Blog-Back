@@ -11,7 +11,6 @@ import { getLogger } from 'nodemailer/lib/shared';
 export class FilesManager {
   private storage: Storage;
   private bucketName: string;
-  private migrated = false;
   constructor(private configService: ConfigService) {
     this.bucketName = this.configService.get('GCS_BUCKET_NAME')!;
     const credentials = JSON.parse(this.configService.get('GCS_CREDENTIALS')!);
@@ -34,7 +33,7 @@ export class FilesManager {
       contentType: mime.lookup(extension) || 'image/jpeg',
       resumable: false,
     });
-    console.log('Uploading to:', fileName);
+
     return `https://storage.googleapis.com/${this.bucketName}/${fileName}`;
   }
 
@@ -80,20 +79,12 @@ export class FilesManager {
   }
 
   async deleteImage(fileUrl: string): Promise<void> {
-    console.log(fileUrl);
     const url = new URL(fileUrl);
     const filePath = decodeURIComponent(
       url.pathname.replace(`/${this.bucketName}/`, ''),
     );
-    console.log('Deleting file at path:', filePath);
 
     const bucket = this.storage.bucket(this.bucketName);
-    const [files] = await bucket.getFiles({ prefix: 'posts/poster/' });
-    console.log(
-      'Files in folder:',
-      files.map((f) => f.name),
-    );
-    console.log(bucket.name);
     const file = bucket.file(filePath);
     const [exists] = await file.exists();
 
@@ -105,7 +96,6 @@ export class FilesManager {
   }
 
   async deleteImages(fileUrls: string[]): Promise<void> {
-    console.log(fileUrls);
     await Promise.all(fileUrls.map((url) => this.deleteImage(url)));
   }
 }

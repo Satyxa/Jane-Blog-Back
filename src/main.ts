@@ -10,7 +10,11 @@ async function bootstrap() {
 
   //const whitelist = ['https://inctagram.fun', 'http://localhost:4000'];
   app.enableCors({
-    origin: ['http://localhost:4000', 'https://inctagram.fun'],
+    origin: [
+      'http://localhost:4000',
+      'https://inctagram.fun',
+      'https://freefallwriting.space',
+    ],
     credentials: true,
   });
   app.use(cookieParser());

@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   Get,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { LoginRegistrationRequest } from './swagger.validation/models/login-registration-request-model';
 import { CommandBus } from '@nestjs/cqrs';
@@ -27,6 +28,7 @@ import { LogoutRequest } from './swagger.validation/models/logout-model';
 import { GetMeCommand } from './use-cases/get-me.command';
 import { Request, Response } from 'express';
 import { cookieOptions } from './cookieOptions';
+import { getRelativeTime } from '../utils/createdAt-formatting';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -36,6 +38,10 @@ export class AuthController {
   @Get('me')
   getMe(@Req() req: Request) {
     const token = req.cookies['accessToken'];
+    if (!token) {
+      console.log(`No token provided ${new Date().toISOString()}`);
+      throw new UnauthorizedException();
+    }
     return this.commandBus.execute(new GetMeCommand(token));
   }
 
