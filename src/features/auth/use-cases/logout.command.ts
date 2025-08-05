@@ -4,7 +4,7 @@ import { LogoutRequest } from '../swagger.validation/models/logout-model';
 import { UnauthorizedException } from '@nestjs/common';
 
 export class LogoutCommand {
-  constructor(public payload: LogoutRequest) {}
+  constructor(public payload: { accessToken: string }) {}
 }
 
 @CommandHandler(LogoutCommand)
@@ -13,10 +13,9 @@ export class LogoutHandler implements ICommandHandler<LogoutCommand> {
 
   async execute({ payload }: LogoutCommand) {
     const isTokenAlreadyExpired = await this.tokenExpiredRepository.getToken(
-      payload.token,
+      payload.accessToken,
     );
-    console.log(isTokenAlreadyExpired, 'isTokenAlreadyExpired');
     if (isTokenAlreadyExpired) throw new UnauthorizedException('Unauthorized');
-    await this.tokenExpiredRepository.expireToken(payload.token);
+    await this.tokenExpiredRepository.expireToken(payload.accessToken);
   }
 }

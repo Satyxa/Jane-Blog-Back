@@ -96,7 +96,7 @@ export class AuthController {
     const accessToken = req.cookies['accessToken'];
 
     if (accessToken) {
-      await this.commandBus.execute(new LogoutCommand({ token: accessToken }));
+      await this.commandBus.execute(new LogoutCommand({ ...accessToken }));
     }
 
     res.clearCookie('accessToken', {

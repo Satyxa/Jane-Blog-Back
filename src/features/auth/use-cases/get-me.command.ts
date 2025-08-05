@@ -21,8 +21,6 @@ export class GetMeHandler implements ICommandHandler<GetMeCommand> {
       payload.accessToken,
     );
     if (isTokenExpired) throw new UnauthorizedException(isTokenExpired);
-    console.log(payload.accessToken, 'payload.accessToken');
-    console.log(isTokenExpired, 'isTokenExpired');
     const tokenPayload = this.jwtService.getResultByToken(payload.accessToken);
     if (!tokenPayload) throw new UnauthorizedException('Unauthorized');
     const user = await this.userRepository.getUserById(tokenPayload.id);
