@@ -15,6 +15,7 @@ export class LogoutHandler implements ICommandHandler<LogoutCommand> {
     const isTokenAlreadyExpired = await this.tokenExpiredRepository.getToken(
       payload.token,
     );
+    console.log(isTokenAlreadyExpired, 'isTokenAlreadyExpired');
     if (isTokenAlreadyExpired) throw new UnauthorizedException('Unauthorized');
     await this.tokenExpiredRepository.expireToken(payload.token);
   }
