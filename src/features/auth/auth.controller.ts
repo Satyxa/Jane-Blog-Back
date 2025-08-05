@@ -94,7 +94,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     const accessToken = req.cookies['accessToken'];
-
+    console.log(1);
     if (accessToken) {
       await this.commandBus.execute(new LogoutCommand({ ...accessToken }));
     }
